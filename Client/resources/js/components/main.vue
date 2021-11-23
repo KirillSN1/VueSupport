@@ -8,6 +8,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+    .test{
+        .t1{
+            background: white;
+        }
+    }
 </style>

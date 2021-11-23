@@ -20,7 +20,21 @@ module.exports = {
         // test: new RegExp(extensions.reduce((f,s)=>f+"|"+s+"$","w*$")),
         test:/\.vue$/,
         loader: 'vue-loader'
-      }
+      },
+      {
+        test: /\.js$/,
+        use: {
+            loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.scss$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader'
+          ]
+     }
     ],
   },
   plugins:[
