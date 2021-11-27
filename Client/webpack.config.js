@@ -1,9 +1,8 @@
 const path = require('path');
-const extensions = ['w*', '.wasm', '.mjs', '.js', '.jsx', '.json', '.vue'];
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV,
   entry: './resources/js/app.js',
   output: {
     path: path.resolve(__dirname, 'public/js'),
@@ -17,24 +16,23 @@ module.exports = {
   module: {
     rules: [
       {
-        // test: new RegExp(extensions.reduce((f,s)=>f+"|"+s+"$","w*$")),
         test:/\.vue$/,
         loader: 'vue-loader'
       },
       {
         test: /\.js$/,
         use: {
-            loader: "babel-loader"
+          loader: "babel-loader"
         }
       },
       {
-        test: /\.scss$/,
-          use: [
-            'style-loader',
-            'css-loader',
-            'sass-loader'
-          ]
-     }
+        test: /\.scss$|\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      }
     ],
   },
   plugins:[

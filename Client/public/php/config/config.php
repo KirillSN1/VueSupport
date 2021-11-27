@@ -2,7 +2,7 @@
 
 use GrahamCampbell\ResultType\Result;
 
-$dotenv = Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+$dotenv = Dotenv\Dotenv::createImmutable(dirname($_SERVER["DOCUMENT_ROOT"],1));
     $dotenv->load();
     function dd(...$any){
         $result = "";
