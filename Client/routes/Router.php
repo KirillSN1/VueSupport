@@ -13,8 +13,10 @@
                 $func = $callback_data[1];
 
                 set_error_handler(function($code,$message){
-                    header('HTTP/1.1 500 Internal Server Error');
-                    header('Content-Type: application/json; charset=UTF-8');
+                    if(!headers_sent()){
+                        header('HTTP/1.1 500 Internal Server Error');
+                        header('Content-Type: application/json; charset=UTF-8');
+                    }
                     die(json_encode(array('message' => $message, 'code' => $code)));
                 });
                 $class::{$func}();
@@ -35,8 +37,10 @@
                 $func = $callback_data[1];
 
                 set_error_handler(function($code,$message){
-                    header('HTTP/1.1 500 Internal Server Error');
-                    header('Content-Type: application/json; charset=UTF-8');
+                    if(!headers_sent()){
+                        header('HTTP/1.1 500 Internal Server Error');
+                        header('Content-Type: application/json; charset=UTF-8');
+                    }
                     die(json_encode(array('message' => $message, 'code' => $code)));
                 });
                 $class::{$func}();
