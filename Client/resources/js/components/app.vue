@@ -1,10 +1,10 @@
 <template>
   <div class="app">
 		<div class="top-contents">
-			<top-banner
+			<top-banner v-if="bannerHeight"
 				ref="banner"
 				src="/images/banners/top-banner.jpg"
-				:offset="isMobile?'300px':'200px'"
+				:offset="isMobile?'0px':'200px'"
 				:height="bannerHeight"
 				:image-height="bannerHeight+$variables.get('headerHeight')">
 			</top-banner>
@@ -41,10 +41,11 @@ export default {
 		},
 	},
 	mounted(){
-		document.addEventListener("scroll",()=>{
-			this.scroll = document.scrollingElement.scrollTop;
-			this.headerOpacity = this.$refs.banner.scrollProcent/100;
-		});
+		if(this.bannerHeight)
+			document.addEventListener("scroll",()=>{
+				this.scroll = document.scrollingElement.scrollTop;
+				this.headerOpacity = this.$refs.banner.scrollProcent/100;
+			});
 	}
 }
 </script>
@@ -52,6 +53,7 @@ export default {
 <style lang="scss">
 body{
 	margin: 0px;
+	background: black;
 }
 .app{
 	max-width: 1400px;
@@ -60,13 +62,17 @@ body{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	background: white;
+	box-shadow: 0px 0px 20px 0px #7a9296;
 }
 .top-contents{
 	.page-content{
-		height: 1000px;
 		background: white;
 		z-index: 1;
 		position: relative;
+		font-size: var(--font-size);
+		padding: 10px;
+
 		.page-title{
 			transition: opacity 0.5s ease-in;
 			&.hidden{

@@ -55,18 +55,20 @@ export default {
   top: 0;
   width: 100%;
   height: var( --header-height);
-	box-shadow: rgb(255 255 255 / 44%) 0px 0px 8px 0px inset;
   backdrop-filter: blur(15px);
   z-index: 2;
   &.mobile{
     backdrop-filter: none;
     background-color: #000000 !important;
 		top:-1px;
+		font-size: var(--font-size);
+		.logo{
+			padding: 15px;
+		}
   }
 	.logo{
 		display: flex;
 		height: 100%;
-		width: min-content;
 		padding: 6px;
 		cursor: pointer;
 		transition: padding 0.1s ease-in-out;

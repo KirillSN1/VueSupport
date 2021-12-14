@@ -1,10 +1,11 @@
 <?
     class Route{
         public static function get($url="", $callback){
+            $path =  parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
             $api_regexp = env("API_REGEXP","");
             $is_regexp = preg_match("/^\/.+\/[a-z]*$/i",$api_regexp);
-            $is_api_request = $is_regexp?preg_match($api_regexp,$_SERVER['REQUEST_URI']):false;
-            $exists = $url == $_SERVER['REQUEST_URI'] || ($url =="*" && !$is_api_request);
+            $is_api_request = $is_regexp?preg_match($api_regexp,$path):false;
+            $exists = $url == $path || ($url =="*" && !$is_api_request);
             if(!$exists) return;
             if(is_callable($callback)) call_user_func($callback,$_GET);
             else if(preg_match("/^[а-яёа-яёa-zA-Z0-9]*(@)[а-яёа-яёa-zA-Z0-9]*$/",$callback)){
@@ -19,16 +20,17 @@
                     }
                     die(json_encode(array('message' => $message, 'code' => $code)));
                 });
-                $class::{$func}();
+                echo($class::{$func}($_REQUEST));
                 restore_error_handler();
                 exit();
             }
         }
         public static function post($url="",$callback){
+            $path =  parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
             $api_regexp = env("API_REGEXP","");
             $is_regexp = preg_match("/^\/.+\/[a-z]*$/i",$api_regexp);
-            $is_api_request = $is_regexp?preg_match($api_regexp,$_SERVER['REQUEST_URI']):false;
-            $exists = $url == $_SERVER['REQUEST_URI'] || ($url =="*" && !$is_api_request);
+            $is_api_request = $is_regexp?preg_match($api_regexp,$path):false;
+            $exists = $url == $path || ($url =="*" && !$is_api_request);
             if(!$exists) return;
             if(is_callable($callback)) call_user_func($callback,$_POST);
             else if(preg_match("/^[а-яёа-яёa-zA-Z0-9]*(@)[а-яёа-яёa-zA-Z0-9]*$/",$callback)){
@@ -43,7 +45,7 @@
                     }
                     die(json_encode(array('message' => $message, 'code' => $code)));
                 });
-                $class::{$func}();
+                echo($class::{$func}($_REQUEST));
                 restore_error_handler();
                 exit();
             }

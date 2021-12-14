@@ -12,6 +12,12 @@ $dotenv = Dotenv\Dotenv::createImmutable(dirname($_SERVER["DOCUMENT_ROOT"],1));
         }
         echo($result);
     }
+    function return_error($message){
+        header('HTTP/1.1 500 Internal Server Error');
+        header('Content-Type: application/json; charset=UTF-8');
+        echo(json_encode([ 'message'=>$message, 'code'=>500 ]));
+        exit; 
+    }
     function env($name,$default=null){
         $var = $_ENV[$name];
         return isset($var)?$var:$default;

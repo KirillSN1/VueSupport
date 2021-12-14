@@ -3,7 +3,12 @@
     require $root.'/api/FreeApiController.php';
 
     Route::get("/","FreeApiController@main");
-    Route::get("ping","FreeApiController@ping");
+    Route::get("/Api/ping","FreeApiController@ping");
     Route::get("/Api/getMenuLinks","FreeApiController@getMenuLinks");
+    Route::get("/Api/getAboutGroups","FreeApiController@getAboutGroups");
+    Route::get("/Api/getItemsGroups","FreeApiController@getItemsGroups");
+    Route::get("/Api/getFooterGroups","FreeApiController@getFooterGroups");
+    Route::get("/Api/getArticlesTitles","FreeApiController@getArticlesTitles");
+    Route::get("/Api/getArticle","FreeApiController@getArticle");
     Route::get("*","FreeApiController@main");
 ?>

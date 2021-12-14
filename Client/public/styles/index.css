@@ -10,6 +10,11 @@
 a{
     text-decoration: none;
 }
+.banner-wrapper{
+    overflow-y: hidden;
+    border-radius: 8px;
+    box-shadow: 0px 4px 0px 0px #951c1c
+}
 .banner{
     border-radius: 8px;
     box-shadow: 0px 4px 0px 0px #951c1c
