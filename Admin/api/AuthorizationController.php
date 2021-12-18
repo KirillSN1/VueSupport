@@ -44,4 +44,16 @@
       if(!$result || sizeof($result)==0) return false;
       return $hash == $result[0]["password"];
     }
+    static function unload_profile(){
+      $_SESSION["password"] = null;
+    }
+    static function get_current_profile(){
+      if(!isset($_SESSION["email"])) return "";
+      $email = $_SESSION["email"];
+      $db = DB::connect();
+      $sql = "SELECT `name`, `email` FROM `adminusers` WHERE `email`='$email' LIMIT 1";
+      $result = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
+      $db->close();
+      return $result[0];
+    }
   }

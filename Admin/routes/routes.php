@@ -9,6 +9,9 @@
     }
 
     Route::get("/","ApiController@main");
+    Route::get("/logout","ApiController@logout");
     Route::get("/Api/ping","ApiController@ping");
+    Route::get("/Api/getProfile", "ApiController@getProfile");
+    Route::get("/Api/getArticles", "ApiController@getArticles");
     Route::get("*","ApiController@main");
 ?>

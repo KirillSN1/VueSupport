@@ -46,9 +46,9 @@
             $db->close();
             return json_encode($footerGroups);
         }
-        static function getArticlesTitles(){
+        static function getArticles(){
             $db = DB::connect();
-            $atricles = $db->query("SELECT id, title FROM articles")->fetch_all(MYSQLI_ASSOC);
+            $atricles = $db->query("SELECT * FROM articles")->fetch_all(MYSQLI_ASSOC);
             $db->close();
             return json_encode($atricles);
         }
@@ -67,5 +67,12 @@
         static function checkProfile($request){
             AuthorizationController::check_profile($request["email"], $request["password"]);
             header("Location: /");
+        }
+        static function logout($request){
+            AuthorizationController::unload_profile();
+            header("Location: /");
+        }
+        static function getProfile(){
+            return json_encode(AuthorizationController::get_current_profile());
         }
     }
