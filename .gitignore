@@ -3,3 +3,4 @@
 **/composer.lock
 **/package-lock.json
 **/public/js/app.generated.js
+**/storage

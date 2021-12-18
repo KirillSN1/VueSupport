@@ -1,0 +1,21 @@
+/* @import url('../fonts/ofont.ru_Mont.ttf'); */
+@font-face {
+    font-family: 'Mont';
+    src: url('../fonts/ofont.ru_Mont.ttf'),
+        url('../fonts/ofont.ru_Mont.woff2'); /* IE9 Compat Modes */
+}
+*{
+    font-family: cursive;
+}
+a{
+    text-decoration: none;
+}
+.banner-wrapper{
+    overflow-y: hidden;
+    border-radius: 8px;
+    box-shadow: 0px 4px 0px 0px #951c1c
+}
+.banner{
+    border-radius: 8px;
+    box-shadow: 0px 4px 0px 0px #951c1c
+}
