@@ -3,7 +3,7 @@
     require $root.'/api/ApiController.php';
     
     Route::post("/Api/checkProfile","ApiController@checkProfile");
-    if(!AuthorizationController::check_profile($_SESSION["email"], $_SESSION["password"])){
+    if(!AuthorizationController::load_profile()){
         require "./php/app/authorizationPage.php";
         exit;
     }

@@ -65,7 +65,7 @@
          * только для страницф авторизации
          */
         static function checkProfile($request){
-            AuthorizationController::save_profile($request["email"], $request["password"]);
+            AuthorizationController::check_profile($request["email"], $request["password"]);
             header("Location: /");
         }
     }
