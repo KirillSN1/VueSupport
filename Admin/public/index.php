@@ -3,6 +3,7 @@
     require_once '../vendor/autoload.php';//using composer packages
     require_once "../public/php/config/config.php";//init .env
     require_once "./php/session.php";
+    require "../public/php/config/cors.php";
     require_once "../api/AuthorizationController.php";
     require_once "../routes/routes.php";
 

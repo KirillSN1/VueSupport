@@ -9,6 +9,6 @@
     Route::get("/Api/getItemsGroups","FreeApiController@getItemsGroups");
     Route::get("/Api/getFooterGroups","FreeApiController@getFooterGroups");
     Route::get("/Api/getArticlesTitles","FreeApiController@getArticlesTitles");
-    Route::get("/Api/getArticle","FreeApiController@getArticle");
+    Route::get("/articledoc","FreeApiController@getArticle");
     Route::get("*","FreeApiController@main");
 ?>

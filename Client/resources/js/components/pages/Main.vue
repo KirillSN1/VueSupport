@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div class="main">
 		<div style="display:flex;">
 			<div class="vertical-menu" style="margin-right:5px">
 				<div class="title">Предоставляемые услуги</div>
 				<list-menu :items="items">
 					<template v-slot:default="{ item }">
-						<a v-if="item.href" :href="item.href">{{item.title}}</a>
+						<a v-if="item.href || (item.article_posted && item.article_id)" :href="item.href || `/article?id=${item.article_id}`">{{item.title}}</a>
 						<span v-else>{{item.title}}</span>
 					</template>
 				</list-menu>
 			</div>
 			<div class="banner-wrapper" style="height:440px">
-				<img src="/images/banners/pages/main/1.jpg">
+				<img style="height:100%; width:auto;" src="/images/banners/pages/main/1.jpg">
 			</div>
 		</div>
   </div>
@@ -81,6 +81,13 @@ export default {
 			&:first-child{ padding-bottom: 1px; }
 			&:last-child{ padding-top: 1px;	}
 		}
+	}
+}
+.main{
+	.banner-wrapper{
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
 	}
 }
 </style>

@@ -1,4 +1,5 @@
 <?
+    require 'DB.php';
     require_once 'ItemsGroups.php';
     class FreeApiController {
         static function main(){
@@ -8,12 +9,12 @@
             echo(json_encode($request["text"]));
         }
         static function getMenuLinks(){
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
+            $db = DB::connect();
             echo(json_encode($db->query("SELECT href, id, title FROM menulinks")->fetch_all(MYSQLI_ASSOC)));
             $db->close();
         }
         static function getAboutGroups(){
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
+            $db = DB::connect();
             $categories = $db->query("SELECT id, title from aboutcategories")->fetch_all(MYSQLI_ASSOC);
             foreach($categories as &$categorie){
                 $id = $categorie['id'];
@@ -23,14 +24,14 @@
             $db->close();
         }
         static function getItemsGroups(){
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
+            $db = DB::connect();
             $groups = new ItemsGroups($db);
             $tree = $groups->getTree();
             echo(json_encode($tree));
             $db->close();
         }
         static function getFooterGroups(){
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
+            $db = DB::connect();
             $footerGroups = $db->query("SELECT * FROM footerGroups")->fetch_all(MYSQLI_ASSOC);
             foreach($footerGroups as &$group){
                 $id = $group['id'];
@@ -46,17 +47,17 @@
             return json_encode($footerGroups);
         }
         static function getArticlesTitles(){
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
-            $atricles = $db->query("SELECT id, title FROM articles")->fetch_all(MYSQLI_ASSOC);
+            $db = DB::connect();
+            $atricles = $db->query("SELECT id, title FROM articles WHERE posted=1")->fetch_all(MYSQLI_ASSOC);
             $db->close();
             return json_encode($atricles);
         }
         static function getArticle($request){
             if(!property_exists((object)$request,"id")) return_error("Не передан параметр id");
             $id = $request["id"];
-            $db = new mysqli($_ENV["DB_HOST"],$_ENV["DB_USER"],$_ENV["DB_PASSWORD"],$_ENV["DB_NAME"]);
-            $atricle = $db->query("SELECT * FROM articles WHERE id=$id")->fetch_all(MYSQLI_ASSOC)[0];
+            $db = DB::connect();
+            $article = $db->query("SELECT html FROM articles WHERE `posted`=1 AND id=$id")->fetch_all(MYSQLI_ASSOC)[0] ?? [ 'html'=>"Cтатья не найдена" ];
             $db->close();
-            return json_encode($atricle);
+            return $article["html"];
         }
     }

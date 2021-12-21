@@ -19,14 +19,14 @@
                         header('HTTP/1.1 500 Internal Server Error');
                         header('Content-Type: application/json; charset=UTF-8');
                     }
-                    die(json_encode(array('message' => $message, 'code' => $code)));
+                    die(json_encode(array('message' => $message, 'code' => $code, 'trace'=> debug_backtrace())));
                 });
                 echo($class::{$func}($_REQUEST));
                 restore_error_handler();
                 exit();
             }
         }
-        public static function post($url="",$callback){
+        public static function post($url="",$callback){  
             $path =  parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
             $api_regexp = env("API_REGEXP","");
             $is_regexp = preg_match("/^\/.+\/[a-z]*$/i",$api_regexp);
@@ -44,9 +44,10 @@
                         header('HTTP/1.1 500 Internal Server Error');
                         header('Content-Type: application/json; charset=UTF-8');
                     }
-                    die(json_encode(array('message' => $message, 'code' => $code)));
+                    die(json_encode(array('message' => $message, 'code' => $code, 'trace'=> debug_backtrace())));
                 });
-                echo($class::{$func}($_REQUEST));
+                $request = sizeof($_REQUEST)>1?$_REQUEST:json_decode(file_get_contents("php://input"), true);
+                echo($class::{$func}($request));
                 restore_error_handler();
                 exit();
             }

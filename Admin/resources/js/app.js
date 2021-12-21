@@ -7,6 +7,13 @@ import VueRouter from 'vue-router';
 import Vue from 'vue';
 // import Variables from './variables.js';
 
+Array.prototype.remove = function(item){
+    let index = this.indexOf(item);
+    if(index<0) return;
+    this.splice(index,1);
+    return this;
+}
+
 Vue.use(VueRouter);
 window.onload = function(){
     window.vmm = new Vue({

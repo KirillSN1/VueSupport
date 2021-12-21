@@ -2,30 +2,25 @@
 	<div id="article-editor">
     <div class="actions-header">
       <div>
-        <input type="submit" class="article-save-b" @submit="saveDesign()" value="Сохранить и выйти"/>
-        <input type="button" class="article-save-b" @click="discardChanges" value="Отменить все"/>
+        <input :disabled="!loaded" type="submit" class="article-save-b" @click="saveDesign()" value="Сохранить и выйти"/>
+        <input :disabled="!loaded" type="button" class="article-save-b" @click="discardChanges" value="Отменить изменения дизайна"/>
       </div>
       <input type="text" class="project-state" :value="projectState" readonly="readonly"/>
       <input ref="imageLink" type="text" class="project-state link" placeholder="URL изображения будет здесь."/>
     </div>
-		<div id="editorContainer">
-			<!-- <email-editor ref="editor" :minHeight="'740px'" @load="editorLoaded" :locale="'ru-RU'"></email-editor> -->
-		</div>
+		<div id="editorContainer"></div>
 	</div>
 </template>
 
 <script>
 export default {
 	props:{
-		articleid:Number,
-    design:Object,
-    form:String,
-    jsoninput:String,
-    htmlinput:String
+    design:Object
 	},
   data(){
     return{
       projectState:"",
+      loaded:false,
       defaultHtml:"",
       optionsOpened:false,
       unlayerOptions:{
@@ -40,10 +35,7 @@ export default {
   },
   async mounted(){
     this.projectState = "Загрузка...";
-    this.jsonInput = document.getElementsByName(this.jsoninput)[0];
-    this.htmlInput = document.getElementsByName(this.htmlinput)[0];
-    this.parentForm = document.getElementsByName(this.form)[0];
-    await this.injectScript('//editor.unlayer.com/embed.js','unlayer').then((unlayer)=>{this.unlayer = unlayer});
+    this.unlayer = await this.injectScript('//editor.unlayer.com/embed.js','unlayer');
     this.unlayer.init(this.unlayerOptions.init);
     this.loadDesign();
     this.configurateImageSource();
@@ -63,6 +55,7 @@ export default {
         this.unlayer.loadDesign(this.design);
         this.unlayer.exportHtml((data)=>{this.defaultHtml = data.chunks.body});
         this.projectState = "Загружено";
+        this.loaded = true;
       }
       else
         this.projectState = "Дизайн не найден";  
@@ -70,26 +63,11 @@ export default {
     configurateImageSource(){
       this.unlayer.addEventListener('image',(file, done)=>{
         let data = new FormData();
-        data.append('image', file.attachments[0]);
-        data.append('articleId', this.articleid);
-        fetch('/Api/saveArticleImg',{
-          method:'POST',
-          body:data,
-          headers:{
-            'Accept': 'application/json',
-            'X-Access-Token': this.$el.attributes.api_token.value,
-            'Access-Control-Allow-Origin': window.location.origin+"/"
-          }
-        }).then((response)=>{
-          if (response.status >= 200 && response.status < 300){
-            return response.json();
-          }
-          else
-            console.error(response.statusText);
-        }).then((fileName)=>{//parsed json => fileName
-            this.$refs.imageLink.value = 'https://mt.delivery/img/img/Articles/'+this.articleid+"/"+fileName;
-        });
+        this.$emit("save-image",{ image:file.attachments[0] })
       });
+    },
+    showLink(link){
+      this.$refs.imageLink.value = link;
     },
     initAutosave() {
       this.unlayer.addEventListener('design:updated',(data)=>{
@@ -104,28 +82,8 @@ export default {
             this.projectState = 'Ошибка сохранения'
             return false;
           }
-          let data = new FormData();
-          data.append('id', this.articleid);
-          data.append('json', JSON.stringify(design));
-          data.append('html', html.chunks.body);
-          data.append('css', html.chunks.css);
-          fetch('/Api/saveArticle',{
-            method:'POST',
-            body:data,
-            headers:{
-              'Accept': 'application/json',
-            'X-Access-Token': this.$el.attributes.api_token.value
-            }
-          }).then((response)=>{
-            if (response.status >= 200 && response.status < 300){
-              return response.json();
-            }
-            else
-              console.error(response.statusText);
-          }).then(()=>{
-            this.projectState = "Сохранено";
-            return true;
-          });
+          this.$emit("save", { design, html });
+          this.projectState = "Сохранено";
         });
       });
       this.projectState = "Сохранение...";

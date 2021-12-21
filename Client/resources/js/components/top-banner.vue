@@ -1,7 +1,7 @@
 <template>
   <div class="top-banner" :style="`height:${height}px`">
     <div class="image-wrapper" :style="`height:${this.imageHeight}px`">
-      <img :src="src" :style="`transform:translateY(calc(${-(scroll*0.5)}px - ${offset}));`"/>
+      <img :src="src" :style="`transform:translateY(calc(${-(scroll*0.5)}px - ${offset})); min-height:${this.imageHeight*2}px;`"/>
       <div class="banner-title" :style="`opacity:${(50-scrollProcent)*2}%;`">МИР КОСМЕТИКИ</div>
     </div>
   </div>
@@ -69,6 +69,7 @@ export default {
     max-height: 100vh;
     img {
       height: auto;
+      object-fit: cover;
     }
   }
 }

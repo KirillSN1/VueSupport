@@ -1,5 +1,5 @@
 <?
-    require_once 'ItemsGroups.php';
+require_once 'ItemsGroups.php';
     require_once 'DB.php';
     class ApiController {
         static function main(){
@@ -27,8 +27,8 @@
             $db = DB::connect();
             $groups = new ItemsGroups($db);
             $tree = $groups->getTree();
-            echo(json_encode($tree));
             $db->close();
+            return json_encode($tree);
         }
         static function getFooterGroups(){
             $db = DB::connect();
@@ -46,20 +46,7 @@
             $db->close();
             return json_encode($footerGroups);
         }
-        static function getArticles(){
-            $db = DB::connect();
-            $atricles = $db->query("SELECT * FROM articles")->fetch_all(MYSQLI_ASSOC);
-            $db->close();
-            return json_encode($atricles);
-        }
-        static function getArticle($request){
-            if(!property_exists((object)$request,"id")) return_error("Не передан параметр id");
-            $id = $request["id"];
-            $db = DB::connect();
-            $atricle = $db->query("SELECT * FROM articles WHERE id=$id")->fetch_all(MYSQLI_ASSOC)[0];
-            $db->close();
-            return json_encode($atricle);
-        }
+        //authorization
         /**
          * проверка и сохранение профиля
          * только для страницф авторизации
@@ -74,5 +61,26 @@
         }
         static function getProfile(){
             return json_encode(AuthorizationController::get_current_profile());
+        }
+        //articles
+        static function linkArticle($request){
+            // articleId groupItemId
+            if(!isset($request['articleId'])) return_error("Не передан параметр articleId");
+            if(!isset($request['groupItemId'])) return_error("Не передан параметр groupItemId");
+            $articleId = $request['articleId'];
+            $groupItemId = $request['groupItemId'];
+            $db = DB::connect();
+            $isArticle = $db->query("SELECT COUNT(`id`) FROM `articles` WHERE `id`=$articleId")->fetch_array()[0];
+            if(!$isArticle) return_error("Передан несуществующий articleId");
+            return json_encode(boolval($db->query("UPDATE `itemsgroups` SET `article_id`=$articleId WHERE `id`=$groupItemId"))); 
+        }
+        static function unlinkArticle($request){
+            // articleId groupItemId
+            if(!isset($request['articleId'])) return_error("Не передан параметр articleId");
+            if(!isset($request['groupItemId'])) return_error("Не передан параметр groupItemId");
+            $articleId = $request['articleId'];
+            $groupItemId = $request['groupItemId'];
+            $db = DB::connect();
+            return json_encode(boolval($db->query("UPDATE `itemsgroups` SET `article_id`=DEFAULT WHERE `id`=$groupItemId AND `article_id`=$articleId"))); 
         }
     }

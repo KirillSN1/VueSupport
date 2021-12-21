@@ -8,7 +8,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(dirname($_SERVER["DOCUMENT_ROOT"],1));
         $result = "";
         foreach($any as $item){
             $json = json_encode($item);
-            $result = $result."<p>$json</p>";
+            $result = $result."<br/><span style=\"background:gray;\">$json</span>";
         }
         echo($result);
     }
